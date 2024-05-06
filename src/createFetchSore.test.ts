@@ -1,4 +1,4 @@
-import { createFetchStore } from "./createFetchStore";
+import { createFetchStore } from './createFetchStore';
 
 interface Todo {
   id: string;
@@ -6,15 +6,15 @@ interface Todo {
   isCompleted: boolean;
 }
 
-describe("createFetchStore()", () => {
-  it("should build state", () => {
+describe('createFetchStore()', () => {
+  it('should build state', () => {
     const store = createFetchStore({
       endpoints: (builder) => ({
         retrieve: builder.create<Todo, string>({
           requestFn: async () => {
             return Promise.resolve<Todo>({
-              id: "1",
-              name: "Finish Refactoring book",
+              id: '1',
+              name: 'Finish Refactoring book',
               isCompleted: false,
             });
           },
@@ -30,14 +30,14 @@ describe("createFetchStore()", () => {
     expect(store.state().retrieve.data).toEqual(null);
   });
 
-  it("should build getters", () => {
+  it('should build getters', () => {
     const store = createFetchStore({
       endpoints: (builder) => ({
         retrieve: builder.create<Todo, string>({
           requestFn: async () => {
             return Promise.resolve<Todo>({
-              id: "1",
-              name: "Finish Refactoring book",
+              id: '1',
+              name: 'Finish Refactoring book',
               isCompleted: false,
             });
           },
@@ -49,14 +49,14 @@ describe("createFetchStore()", () => {
     expect(store.getters.retrieveComputed).not.toBeUndefined();
   });
 
-  it("should build actions", async () => {
+  it('should build actions', async () => {
     const store = createFetchStore({
       endpoints: (builder) => ({
         retrieve: builder.create<Todo, string>({
           requestFn: async () => {
             return Promise.resolve<Todo>({
-              id: "1",
-              name: "Finish Refactoring book",
+              id: '1',
+              name: 'Finish Refactoring book',
               isCompleted: false,
             });
           },

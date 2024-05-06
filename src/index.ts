@@ -1,1 +1,1 @@
-export * from "./createFetchStore";
+export * from './createFetchStore';

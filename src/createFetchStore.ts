@@ -4,11 +4,13 @@ export type EndpointDefinition<ResultType, RequestArg> = {
   requestFn(arg: RequestArg): MaybePromise<ResultType>;
 } & ThisType<AnyFetchStoreActions<any>>;
 
-type ResultTypeFrom<E extends EndpointDefinition<any, any>> =
-  E extends EndpointDefinition<infer RT, any> ? RT : unknown;
+type ResultTypeFrom<E extends EndpointDefinition<any, any>> = E extends EndpointDefinition<infer RT, any>
+  ? RT
+  : unknown;
 
-type RequestArgTypeFrom<E extends EndpointDefinition<any, any>> =
-  E extends EndpointDefinition<any, infer AT> ? AT : unknown;
+type RequestArgTypeFrom<E extends EndpointDefinition<any, any>> = E extends EndpointDefinition<any, infer AT>
+  ? AT
+  : unknown;
 
 export type Endpoints = Record<string, EndpointDefinition<any, any>>;
 
@@ -26,29 +28,21 @@ export type EndpointBuilder = {
 };
 
 type FetchStoreState<E extends Endpoints> = {
-  readonly [K in keyof E]: FetchStoreRequestState<
-    Extract<E[K], EndpointDefinition<any, any>>
-  >;
+  readonly [K in keyof E]: FetchStoreRequestState<Extract<E[K], EndpointDefinition<any, any>>>;
 };
 
 type FetchStoreGetters<E extends Endpoints> = {
-  readonly [K in keyof E as K extends string
-    ? `${K}Computed`
-    : never]: () => FetchStoreRequestState<
+  readonly [K in keyof E as K extends string ? `${K}Computed` : never]: () => FetchStoreRequestState<
     Extract<E[K], EndpointDefinition<any, any>>
   >;
 };
 
 type FetchStoreActions<E extends Endpoints> = {
-  [K in keyof E as K extends string ? `${K}Action` : never]: (
-    arg: RequestArgTypeFrom<E[K]>,
-  ) => void;
+  [K in keyof E as K extends string ? `${K}Action` : never]: (arg: RequestArgTypeFrom<E[K]>) => void;
 };
 
 type AnyFetchStoreActions<E extends Endpoints> = {
-  [K in keyof E as K extends string ? `${K}Action` : never]: (
-    arg?: RequestArgTypeFrom<E[K]>,
-  ) => void;
+  [K in keyof E as K extends string ? `${K}Action` : never]: (arg?: RequestArgTypeFrom<E[K]>) => void;
 };
 
 export type CreateFetchStoreOptions<E extends Endpoints> = {
@@ -62,9 +56,7 @@ export type FetchStoreDefinition<E extends Endpoints> = {
 };
 
 class EndpointBuilderImpl implements EndpointBuilder {
-  create<ResultType, RequestArg>(
-    definition: EndpointDefinition<ResultType, RequestArg>,
-  ) {
+  create<ResultType, RequestArg>(definition: EndpointDefinition<ResultType, RequestArg>) {
     return definition;
   }
 }
@@ -86,7 +78,7 @@ function buildState<E extends Endpoints>(endpoints: E): FetchStoreState<E> {
 function buildGetters<E extends Endpoints>(endpoints: E): FetchStoreGetters<E> {
   const getters: any = {};
   Object.keys(endpoints).forEach((name) => {
-    getters[name + "Computed"] = (state: FetchStoreState<E>) => ({
+    getters[name + 'Computed'] = (state: FetchStoreState<E>) => ({
       isLoading: state?.[name]?.isLoading,
       hasError: state?.[name]?.hasError,
       error: state?.[name]?.error,
@@ -100,8 +92,8 @@ function buildGetters<E extends Endpoints>(endpoints: E): FetchStoreGetters<E> {
 function buildActions<E extends Endpoints>(endpoints: E): FetchStoreActions<E> {
   const actions: any = {};
   Object.keys(endpoints).forEach((name) => {
-    actions[name + "Action"] = async function (params: any) {
-      let requestState = this?.[name] as any;
+    actions[name + 'Action'] = async function (params: any) {
+      const requestState = this?.[name] as any;
 
       if (requestState?.isLoading) {
         return;
@@ -137,9 +129,7 @@ function buildActions<E extends Endpoints>(endpoints: E): FetchStoreActions<E> {
   return actions as FetchStoreActions<E>;
 }
 
-function createFetchStore<E extends Endpoints>({
-  endpoints,
-}: CreateFetchStoreOptions<E>): FetchStoreDefinition<E> {
+function createFetchStore<E extends Endpoints>({ endpoints }: CreateFetchStoreOptions<E>): FetchStoreDefinition<E> {
   const definitions = endpoints(new EndpointBuilderImpl());
   const result = {
     state: () => buildState(definitions),

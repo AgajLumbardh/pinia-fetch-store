@@ -49,5 +49,6 @@
     "fetch",
     "store",
     "request",
-    "state"]
+    "state"
+  ]
 }
