@@ -1,6 +1,6 @@
 {
   "name": "pinia-fetch-store",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "A small library for request state management when using Pinia.",
   "repository": {
     "type": "git",
